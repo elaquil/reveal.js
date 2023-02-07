@@ -1,40 +1,248 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
-	<head>
-		<meta charset="utf-8">
-		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <head>
+        <meta charset="utf-8" />
+        <meta
+            name="viewport"
+            content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
+        />
 
-		<title>reveal.js</title>
+        <title>reveal.js</title>
 
-		<link rel="stylesheet" href="dist/reset.css">
-		<link rel="stylesheet" href="dist/reveal.css">
-		<link rel="stylesheet" href="dist/theme/black.css">
+        <link rel="stylesheet" href="dist/reset.css" />
+        <link rel="stylesheet" href="dist/reveal.css" />
+        <link rel="stylesheet" href="dist/theme/moon.css" />
 
-		<!-- Theme used for syntax highlighted code -->
-		<link rel="stylesheet" href="plugin/highlight/monokai.css">
-	</head>
-	<body>
-		<div class="reveal">
-			<div class="slides">
-				<section>Slide 1</section>
-				<section>Slide 2</section>
-			</div>
-		</div>
+        <!-- Theme used for syntax highlighted code -->
+        <link rel="stylesheet" href="plugin/highlight/monokai.css" />
+    </head>
+    <body>
+        <div class="reveal">
+            <div class="slides">
+				<section data-auto-animate>
+					<h1>Lunch & Learn</h1>
+					<h4>The ultimate CMS for professional Lunch And Learn activites</h4>
+					<p>
+						<small>
+							An intern project by Malachi Habib & Ismael Hamilton
+						</small>
+					</p>
+				</section>
+				<section data-visibility="uncounted" data-auto-animate>
+					<h1>Lunch & Learn</h1>
+					<h4>The <span style="font-weight: bolder; font-size: 5rem; text-shadow: 0px 0px 30px red;">ultimate</span> CMS for professional Lunch And Learn activites</h4>
+					<p>
+						<small>
+							An intern project by Malachi Habib & Ismael Hamilton
+						</small>
+					</p>
+				</section>
+				<section>
+					<h3>Solution Requirements</h3>
+					<section>
+						<ul>
+							<li class="fragment fade-down"><b>Design</b></li>
+							<ul>
+								<li class="fragment fade-right">Approval by Scott, Matt Allen, Rory</li>
+								<li class="fragment fade-right">
+									<p class="fragment highlight-green">
+										<b>
+											Disapproval by Steve
+										</b>
+									</p>
+								</li>
+							</ul>
+						</ul>
+						</section>
+						<section>
+							<ul>
+								<li class="fragment fade-down"><b>Develop</b></li>
+								<ul>
+									<li class="fragment fade-right">Create a new repo</li>
+									<li class="fragment fade-right">Ability to list previous lunch and learn events</li>
+									<li class="fragment fade-right">Maybe show an image</li>
+									<li class="fragment fade-right">Who it was by</li>
+									<li class="fragment fade-right">A link to resources for it (if available)</li>
+									<li class="fragment fade-right">Ability to show upcoming lunch and learn events</li>
+									<li class="fragment fade-right">Ability to easily update the events</li>
+									<li class="fragment fade-right">E.g. via CMS, or easily editable via source code</li>
+								</ul>
+							</ul>
+						</section>
+				</section>
+				<section>
+					<h3>Tech Stack</h3>
+					<section>
+							<ul>
+								<li class="fragment fade-down"><b>Frontend</b></li>
+								<ul>
+									<li class="fragment fade-right">React</li>
+									<li class="fragment fade-right">TypeScript</li>
+									<li class="fragment fade-right">Next.js</li>
+								</ul>
+							</ul>
+						</section>
+						<section>
+							<ul>
+								<li class="fragment fade-down"><b>Backend</b></li>
+								<ul>
+									<li class="fragment fade-right">ASP.NET Core REST Web Api</li>
+								</ul>
+							</ul>
+						</section>
+						<section>
+							<ul>
+								<li class="fragment fade-down"><b>Hosting & Storage</b></li>
+								<ul>
+									<li class="fragment fade-right">Azure SQL server & DB</li>
+									<li class="fragment fade-right">Azure Blob Storage</li>
+								</ul>
+							</ul>
+						</section>
+						<section>
+							<ul>
+								<li class="fragment fade-down"><b>Authentication</b></li>
+								<ul>
+									<li class="fragment fade-right">Auth0 OAuth2</li>
+								</ul>
+							</ul>
+						</section>
+				</section>
+				<section>
+					<h3>Features</h3>
+					<section>
+						<ul>
+							<li class="fragment fade-right"><b>Create & Delete</b> Lunch and Learn meeting</li>
+							<li class="fragment fade-right"><b>Edit</b> meeting details</li>
+							<li class="fragment fade-right"><b>Add</b> meeting attachments</li>
+							<li class="fragment fade-right"><b>View</b> upcoming and previous meetings</li>
+							<li class="fragment fade-right"><b>State of the art</b> secure API</li>
+						</ul>
+					</section>
+					<section data-markdown>
+						<textarea data-template>
+							#### Secure API
+							`AttachmentsList.tsx`
+							> ```ts [1-5|4]
+							fetch(`/api/attachment/${meetingId}`)
+							.then((res) => res.json())
+							.then((data) => {
+								setAttachmentData(data);
+							});
+							//TODO add auth to the API
 
-		<script src="dist/reveal.js"></script>
-		<script src="plugin/notes/notes.js"></script>
-		<script src="plugin/markdown/markdown.js"></script>
-		<script src="plugin/highlight/highlight.js"></script>
-		<script>
-			// More info about initialization & config:
-			// - https://revealjs.com/initialization/
-			// - https://revealjs.com/config/
-			Reveal.initialize({
-				hash: true,
+						</textarea>
+					</section>
+					<section data-markdown>
+						<textarea data-template>
+							#### Secure API
+							`AttachmentController.cs`
+							```C# [1-13, 15|6-13]
+							[HttpGet]
+							[Route("{meetingId:guid}")]
+							public async Task<IActionResult> GetAttachments
+								([FromRoute] Guid? meetingId)
+							{
+								return Ok(
+									await _context.Attachments
+										.Include(i => i.Meeting)
+										.Where(attachment => 
+										attachment.Meeting.MeetingID.Equals(meetingId)
+										)
+										.ToListAsync()
+								);
+								//TODO add ANY error handling or auth, please
+							}
+							```
+						</textarea>
+					</section>
+					<section>
+						<ul>
+							<li><b>Create & Delete</b> Lunch and Learn meeting</li>
+							<li><b>Edit</b> meeting details</li>
+							<li><b>Add</b> meeting attachments</li>
+							<li><b>View</b> upcoming and previous meetings</li>
+							<li><b>State of the art</b> secure API</li>
+							<li class="fragment fade-right"><b>Painful</b> mobile user experience</li>
+							<li class="fragment fade-right"><b>Brand friendly, non copyright infringing</b> logo</li>
+						</ul>
+					</section>
+					<section data-background-color="RosyBrown">
+						<h4>Completely original Logo</h4>
+						<img src="https://lunchandlearnblob.blob.core.windows.net/attachments/LNL-logo2.png">
+					</section>
+					<section>
+						<ul>
+							<li><b>Create & Delete</b> Lunch and Learn meeting</li>
+							<li><b>Edit</b> meeting details</li>
+							<li><b>Add</b> meeting attachments</li>
+							<li><b>View</b> upcoming and previous meetings</li>
+							<li><b>State of the art</b> secure API</li>
+							<li><b>Painful</b> mobile user experience</li>
+							<li><b>Brand friendly, non copyright infringing</b> logo</li>
+							<li class="fragment fade-right"><b>Disproportional</b> server cost to functionality ratio</li>
+							<li class="fragment fade-right"><b>Poorly coupled</b> SQL relationships</li>
+						</ul>
+					</section>
+				</section>
+				<section>
+					<h2>Showcase</h2>
+				</section>
+				<section>
+					<section>
+						<h3>What Worked</h3>
+						<ul>
+							<li class="fragment fade-right">Contet</li>
+						</ul>
+					</section>
+					<section>
+						<h3>What Didn't</h3>
+						<ul>
+							<li class="fragment fade-right">Plans for Microsoft Graph intergration</li>
+						</ul>
+					</section>
+				</section>
+				<section>
+					<h2>What's Next</h2>
+					<section>
+						<ul style="font-size:2rem;">
+							<li class="fragment fade-right">Complete and deploy L&L site</li>
+							<li class="fragment fade-right">By Q1 2023, all CF team members are using L&L</li>
+							<li class="fragment fade-right">By Q2 most RAA departments adopt L&L</li>
+							<li class="fragment fade-right">By Q3 the remaining RAA departments (briefly known as <b>The Resistance</b>) succumb to L&L</li>
+							<li class="fragment fade-right">In 2024, L&L goes public ($LNL), eclipsing RAA, to near universal adoption rapidly</li>
+							<li class="fragment fade-right">In 2025, all notions of Web3 are abandoned in favour of a L&L based <u>intern</u>et</li>
+							<li class="fragment fade-right">In 2026, lunch is no longer just a meal, it is the cornerstone of every day, L&L becomes eternal</li>
+						</ul>
+					</section>
+					<section>
+						<p>Projected Growth</p>
+						<img style="height:30vh;"src="Revenue.png" class="fragment fade-down">
+					</section>
+				</section>
+				<section>
+					<h2>Q&A</h2>
+				</section>
+				<section>
+					<h2>Thank you!</h2>
+				</section>
+            </div>
+        </div>
 
-				// Learn about plugins: https://revealjs.com/plugins/
-				plugins: [ RevealMarkdown, RevealHighlight, RevealNotes ]
-			});
-		</script>
-	</body>
+        <script src="dist/reveal.js"></script>
+        <script src="plugin/notes/notes.js"></script>
+        <script src="plugin/markdown/markdown.js"></script>
+        <script src="plugin/highlight/highlight.js"></script>
+        <script>
+            // More info about initialization & config:
+            // - https://revealjs.com/initialization/
+            // - https://revealjs.com/config/
+            Reveal.initialize({
+                hash: true,
+
+                // Learn about plugins: https://revealjs.com/plugins/
+                plugins: [RevealMarkdown, RevealHighlight, RevealNotes],
+            });
+        </script>
+    </body>
 </html>
